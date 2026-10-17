@@ -13,6 +13,9 @@
     [npm run dev]ocs/troubleshooting#npm-run-build-fails-to-minify) <br />
 
 # TODO
+* ADD API
+* ADD React Components
+* ADD React Pages
 * ADD CORS
 * ADD SIMPLE ROUTER/API 
 * ADD DB CONNECT

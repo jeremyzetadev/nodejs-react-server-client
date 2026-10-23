@@ -8,7 +8,8 @@ function App() {
 
   const API_URL = 'http://localhost:4000';
 
-  const [shouldFetch, setShouldFetch] = useState(false);
+  const [shouldFetchItems, setShouldFetchItems] = useState(false);
+  const [shouldFetchDataActivityWithMsg, setShouldFetchDataActivityWithMsg] = useState(false);
   const [items, setItems] = useState([
       {
           id: 1,
@@ -21,9 +22,11 @@ function App() {
           item: "sugar",
       },
   ]);
+  const [dataActivityWithMsg, setDataActivityWithMsg] = useState([
+  ]);
 
     useEffect(()=>{
-        if(shouldFetch){
+        if(shouldFetchItems){
             const fetchItems = async ()=> {
                 try{
                     const response = await fetch(`${API_URL}/itemsTest`); 
@@ -33,16 +36,33 @@ function App() {
                 } catch(err) {
                     console.warn(err);
                 } finally {
-                    setShouldFetch(false);
+                    setShouldFetchItems(false);
+                }
+            }
+            fetchItems();
+        }else if(shouldFetchDataActivityWithMsg){
+            const fetchItems = async ()=> {
+                try{
+                    const response = await fetch(`${API_URL}/dataWithMsg`); 
+                    const dataActivityWithMsg = await response.json();
+                    console.log(dataActivityWithMsg);
+                    setDataActivityWithMsg(dataActivityWithMsg);
+                } catch(err) {
+                    console.warn(err);
+                } finally {
+                    shouldFetchDataActivityWithMsg(false);
                 }
             }
             fetchItems();
         };
 
-    },[shouldFetch])
+    },[shouldFetchItems, shouldFetchDataActivityWithMsg])
 
-    const handleButtonFetchClick = () => {
-        setShouldFetch(true); // Set shouldFetch to true to trigger the useEffect
+    const handleButtonFetchItemClick = () => {
+        setShouldFetchItems(true); // Set shouldFetch to true to trigger the useEffect
+    };
+    const handleButtonFetchDataWithMessageClick = () => {
+        setShouldFetchDataActivityWithMsg(true); // Set shouldFetch to true to trigger the useEffect
     };
 
   return (
@@ -55,7 +75,15 @@ function App() {
           </li>
       ))}
 
-      <button onClick={handleButtonFetchClick}>Click to fetch data for usersTest</button>
+      <button onClick={handleButtonFetchItemClick}>Click to fetch data for itemsTests</button><br/>
+      <button onClick={handleButtonFetchDataWithMessageClick}>Click to fetch data for dataWithMessage</button>
+      <h1>{dataActivityWithMsg.message}</h1>
+      {/* dataActivityWithMsg?.data ensures .map() only runs when data exists */}
+        {dataActivityWithMsg?.data?.map((activity, index) => (
+          <li key={index}>
+            <strong>{activity.name}</strong> — {activity.calories} calories
+          </li>
+        ))}
 
       {/*
       <div>

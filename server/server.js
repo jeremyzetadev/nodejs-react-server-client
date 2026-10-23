@@ -41,6 +41,24 @@ const itemsTest = [
     },
 ]
 
+const dataActivity = [
+    {
+        name: 'walk',
+        calories: 200
+    },
+    {
+        name: 'run',
+        calories: 400
+    },
+]
+
+app.get('/dataWithMsg',(req, res)=> {
+    res.json({
+        message: "from API dataWithMsg",
+        data: dataActivity
+    })
+})
+
 app.get('/usersTest', (req, res) => {
     res.json(usersTest);
 })

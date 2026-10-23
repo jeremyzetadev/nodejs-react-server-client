@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { Link } from "react-router-dom";
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
@@ -67,6 +68,13 @@ function App() {
 
   return (
     <>
+      <nav>
+          <div class="nav" style={{ display: "flex", gap: "20px" }}>
+              <Link to="/">Home</Link>
+              <Link to="/pageError404">ErrorPage</Link>
+          </div>
+      </nav>
+
       {items.map(item=>(
           <li className='item' key={item.id}>
             <h2>The item id is {item.id}</h2>

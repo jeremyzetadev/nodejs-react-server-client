@@ -14,10 +14,10 @@
 
 # TODO
 * ADD API
-* ADD React Components
-~~* ADD React Pages~~
-~~* ADD CORS~~
-~~* ADD SIMPLE ROUTER/API~~
+* ADD React Components<br />
+~~* ADD React Pages~~<br />
+~~* ADD CORS~~<br />
+~~* ADD SIMPLE ROUTER/API~~<br />
 * ADD DB CONNECT
 * ADD LOGIN/LOGOUT/REGISTER
 * ADD VALIDATION/MIDDLEWARE/SERVERLOGS

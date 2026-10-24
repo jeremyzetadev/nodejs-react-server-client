@@ -1,0 +1,16 @@
+import express from 'express';
+import employeesController from '../../controllers/employeesController.js';
+const router = express.Router();
+
+router.route("/")
+    .get(employeesController.getAllEmployees)
+    .post(employeesController.createNewEmployee)
+    .put(employeesController.updateEmployee)
+    .delete(employeesController.deleteEmployee)
+
+router.route('/:id')
+    .get(employeesController.getEmployee)
+
+export default router;
+// before-ES6
+// module.exports = router

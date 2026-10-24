@@ -71,6 +71,11 @@ app.get('/dataTest', (req, res) => {
     res.json(users);
 })
 
+import employeesRouter from './routes/api/employees.js'; // Note: include the .js extension
+app.use('/employees', employeesRouter);
+// before-ES6
+// app.use('/employees', require('./routes/api/employees.js'));
+
 app.get('/', (req, res) => {
     res.status(200).send({data: {message: 'Testing nodejs-react'}});
 })

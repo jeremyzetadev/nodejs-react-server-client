@@ -46,7 +46,7 @@ const deleteEmployee = (req, res) => {
         res.status(400).json({'message':`The employee id ${req.body.id} cannot be found`});
 
     const filteredArray = data.employees.filter(emp=>emp.id !== parseInt(req.body.id));
-    data.setEmployees([...filterdArray]);
+    data.setEmployees([...filteredArray]);
     res.json(data.employees);
 }
 

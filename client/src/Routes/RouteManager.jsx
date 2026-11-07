@@ -1,10 +1,12 @@
 import { createBrowserRouter } from "react-router-dom";
 
-import RoutePublic from "../Routes/RoutePublic/RoutePublic.jsx";
 import RouteApp from "../Routes/RouteApp/RouteApp.jsx"
+import RoutePublic from "../Routes/RoutePublic/RoutePublic.jsx";
+import RouteAuth from "../Routes/RouteAuth/RouteAuth.jsx";
 const Router = createBrowserRouter([
   RouteApp,
-  ...RoutePublic
+  ...RoutePublic,
+  ...RouteAuth
 ]);
 
 export default Router;

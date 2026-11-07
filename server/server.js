@@ -78,15 +78,52 @@ app.use('/employees', employeesRouter);
 // app.use('/employees', require('./routes/api/employees.js'));
 
 
+//if whole program-> should be use/init from database if server reruns
+let refreshTokens = []
+const userAuths = []
+app.post('/userAuthGetAccessToken', (req,res)=>{
+    const refreshToken = req.body.token;
+    if(refreshToken==null) return res.sendStatus(401);
+    if(!refreshTokens.includes(refreshToken)) return res.sendStatus(403);
+    jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
+        if(err) return res.sendStatus(403)
+        const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
+        res.json({accessToken: accessToken})
+    })
+});
 
-app.post('/userAuthlogin',(req,res)=>{
+app.post('/userAuthlogin',async (req,res)=>{
     //Authenticate user
+    try {
+        const hashedPassword = await bcrypt.hash(req.body.password, 10);
+        const userAuth = { name: req.body.name, password: hashedPassword };
+        userAuths.push(userAuth);
+        res.status(201).send();
+    } catch {
+        res.status(500).send();
+    }
+    
+    //jwt assignment
     const username = req.body.username
+    // if username is not unique get from db unique userID
+    // const user_uniqueid = 1
+    // const user = {name:username, user_uniqueid:user_uniqueid}
     const user = {name:username};
-
-    const accessToken = jwt.sign(user,process.env.ACCESS_TOKEN_SECRET);
-    res.json({accessToken:accessToken});
+    const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
+    const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '30d' });
+    if (!refreshTokens.includes(refreshToken)) refreshTokens.push(refreshToken);
+    res.json({
+        accessToken:accessToken,
+        refreshToken:refreshToken
+    });
 })
+
+app.delete('/logout', (req,res)=>{
+    //if whole program-> should be in db delete token 
+    refreshTokens = refreshTokens.filter((token)=>token!==req.body.token)
+    res.statusCode(204);
+})
+
 import {authenticateToken} from './middleware/jwtUserAuth.js'
 import userAuthRouter from './routes/api/userAuth.js';
 app.use('/userAuth',authenticateToken, userAuthRouter);

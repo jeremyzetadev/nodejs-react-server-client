@@ -1,8 +1,11 @@
 import express from 'express'
 import bcrypt from 'bcrypt';
 import cors from 'cors'
+import dotenv from 'dotenv'
 const port = process.env.API_PORT || 4000;
 const app = express();
+dotenv.config({path: '../.env'});
+
 import * as API from './middleware/apikeys.js';
 import {users} from './apiData.js';
 import jwt from 'jsonwebtoken'
@@ -113,20 +116,23 @@ app.post('/Authlogin',async (req,res)=>{
         const userAuth = { username: username, password: hashedPassword };
         userAuths.push(userAuth);
         console.log('userAuth',{userAuth}); 
-        res.json({userAuth});
-        res.status(201).send();
+        // res.json({userAuth});
+        // res.status(201).send();
     } catch {
         console.log('error occur');
         res.status(500).send();
     }
     
-    // const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
-    // const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '30d' });
-    // if (!refreshTokens.includes(refreshToken)) refreshTokens.push(refreshToken);
-    // res.json({
-    //     accessToken:accessToken,
-    //     refreshToken:refreshToken
-    // });
+    console.log('beforeaccesstoken'); 
+    const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
+    console.log('afteraccesstoken'); 
+    const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '30d' });
+    console.log('afterrefreshtoken'); 
+    if (!refreshTokens.includes(refreshToken)) refreshTokens.push(refreshToken);
+    res.json({
+        accessToken:accessToken,
+        refreshToken:refreshToken
+    });
 })
 
 app.delete('/logout', (req,res)=>{

@@ -6,6 +6,7 @@ import * as API from './middleware/apikeys.js';
 import {users} from './apiData.js';
 import jwt from 'jsonwebtoken'
 
+app.use(express.json());
 app.use(cors());
 
 const usersTest = [
@@ -81,7 +82,7 @@ app.use('/employees', employeesRouter);
 //if whole program-> should be use/init from database if server reruns
 let refreshTokens = []
 const userAuths = []
-app.post('/userAuthGetAccessToken', (req,res)=>{
+app.post('/AuthGetAccessToken', (req,res)=>{
     const refreshToken = req.body.token;
     if(refreshToken==null) return res.sendStatus(401);
     if(!refreshTokens.includes(refreshToken)) return res.sendStatus(403);
@@ -92,23 +93,28 @@ app.post('/userAuthGetAccessToken', (req,res)=>{
     })
 });
 
-app.post('/userAuthlogin',async (req,res)=>{
+app.post('/Authlogin',async (req,res)=>{
     //Authenticate user
+
+    //jwt assignment
+    // const username = req.body.username
+    const body = req.body ?? {};
+    const username = body.username;
+    const password = body.password;
+    // if username is not unique get from db unique userID
+    // const user_uniqueid = 1
+    // const user = {name:username, user_uniqueid:user_uniqueid}
+    const user = {name:username};
     try {
+        console.log('Login attempt:', { username, password });
         const hashedPassword = await bcrypt.hash(req.body.password, 10);
-        const userAuth = { name: req.body.name, password: hashedPassword };
+        const userAuth = { username: req.body.name, password: hashedPassword };
         userAuths.push(userAuth);
         res.status(201).send();
     } catch {
         res.status(500).send();
     }
     
-    //jwt assignment
-    const username = req.body.username
-    // if username is not unique get from db unique userID
-    // const user_uniqueid = 1
-    // const user = {name:username, user_uniqueid:user_uniqueid}
-    const user = {name:username};
     const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
     const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '30d' });
     if (!refreshTokens.includes(refreshToken)) refreshTokens.push(refreshToken);

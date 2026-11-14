@@ -17,6 +17,8 @@ function PageAuthLogin() {
       const data = { username, password };
       alert(`username:${username}, password:${password}`);
       const response = await api.post('/AuthLogin', data);
+      alert(`DATA: ${response.data}`);
+
       setAuthData(response.data);
     } catch (err) {
       if (err.response) {

@@ -4,9 +4,15 @@ import api from '../../Api/Base.jsx'
 function PageAuthLogin() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [authData, setAuthData] = useState(null);
+  const [authData, setAuthData] = useState(JSON.parse(localStorage.getItem('itemAuthData')));
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  const setAndSaveAuth = (itemAuthData) => {
+    setAuthData(itemAuthData);
+    localStorage.setItem('itemAuthData',JSON.stringify(itemAuthData));
+    console.log(itemAuthData);
+  } 
 
   const handleSubmit = async (e) => {
     e.preventDefault(); // prevent full page reload on form submit
@@ -18,8 +24,8 @@ function PageAuthLogin() {
       alert(`username:${username}, password:${password}`);
       const response = await api.post('/AuthLogin', data);
       alert(`DATA: ${response.data}`);
-
-      setAuthData(response.data);
+      setAndSaveAuth(response.data);
+      // setAuthData(response.data);
     } catch (err) {
       if (err.response) {
         // Non-2xx response from server

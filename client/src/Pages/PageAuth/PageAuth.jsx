@@ -28,7 +28,15 @@ function PageAuth() {
     try {
       setAndSaveAuth();
       alert(`DATA: ${authData}`);
-      const response = await api.post('/AuthLoginToken', authData);
+      const token = authData?.accessToken;
+      //React "pageAuth" is the weblink but at Node it is "userAuth" (can be the same, but usually the api too is obfuscated)
+      const response = await api.get('/userAuth', 
+          {headers: {Authorization: token}
+      });
+      // authData here should be use for post and setup for post
+      // const response = await api.post('/userAuth', authData,
+      //     {headers: {Authorization: token}
+      // });
       alert(`DATA: ${JSON.stringify(response.data)}`);
     } catch (err) {
       if (err.response) {
@@ -56,6 +64,7 @@ function PageAuth() {
       <h2>This is page PageAuth need to be logined</h2>
       {loading && <p>Logging in...</p>}
       {error && <p style={{ color: 'red' }}>{error}</p>}
+      {!error && <p style={{ color: 'blue' }}>verified to by jwt to access this page</p>}
     </>
   );
 }

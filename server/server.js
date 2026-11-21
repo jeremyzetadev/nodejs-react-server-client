@@ -141,6 +141,7 @@ app.delete('/logout', (req,res)=>{
     res.statusCode(204);
 })
 
+
 import {authenticateToken} from './middleware/jwtUserAuth.js'
 import userAuthRouter from './routes/api/userAuth.js';
 app.use('/userAuth',authenticateToken, userAuthRouter);

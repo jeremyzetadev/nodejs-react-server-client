@@ -22,6 +22,7 @@ function PageAuthLogin() {
     try {
       const data = { username, password };
       alert(`username:${username}, password:${password}`);
+      //React "pageAuthLogin" is the weblink but at Node it is "AuthLogin" (can be the same, but usually the api too is obfuscated)
       const response = await api.post('/AuthLogin', data);
       alert(`DATA: ${response.data}`);
       setAndSaveAuth(response.data);
